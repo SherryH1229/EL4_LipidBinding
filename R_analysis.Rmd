@@ -2,7 +2,7 @@
 title: "EL4_lipid_pullDown"
 author: "Xuerui Huang"
 date: "5/5/2019"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +17,7 @@ library(ggpubr)
 library(dplyr)
 library(tidyverse)
 library(reshape2)
+library("grid")
 
 source("~/dataOS/CS_RNA/Functions.R")
 ```
@@ -58,7 +59,73 @@ Op_SYMBOL <- sapply(OutputVec_SYMBOL, '[', seq(max(sapply(OutputVec_SYMBOL, leng
 ```
 # Plot result
 ```{r}
+#Get all the genes
+Uni_gene <- c()
+for (i in c(1:ncol(Op_SYMBOL))){
+  Uni_gene <- c(Uni_gene,Op_SYMBOL[,i] %>% .[!is.na(.)] %>% as.vector(.))
+}
 
+#gene cands duplicated occured genes
+dup_genes <- table(Uni_gene) %>% as.data.frame(.) %>% subset(.,.$Freq>4) %>% .[order(-.$Freq),]
+dup_genes_names <- dup_genes$Uni_gene %>% as.vector(.)
+dup_genes_names[1:10]
+
+write.csv(dup_genes,"test.csv")
+#get count df for count occurace of genes in each file, 1==occur, 0==not occur
+ct_all <- c()
+for (i in c(1:length(File_title))){
+  ct_occur <- c()
+  for (gene in dup_genes_names){
+    if (gene %in% Op_SYMBOL[,i]){
+      ct_occur <- c(ct_occur,1)
+    } 
+    else{
+      ct_occur <- c(ct_occur,0)
+    }
+  }
+  ct_all <- c(ct_all,as.data.frame(ct_occur))
+}
+
+count_df <- cbind(dup_genes_names,as.data.frame(ct_all)) %>% as.data.frame(.) %>% set_colnames(.,c("SYMBOL",File_title))
+
+
+
+# Run clustering
+count_matrix <- as.matrix(t(count_df[,c(2:ncol(count_df))]))
+rownames(count_matrix) <- File_title
+dendro <- hclust(d = dist(x = count_matrix))
+
+File_title
+File_title[dendro$order]
+#plot dendrogram
+require("ggdendro")
+count_dendro <- as.dendrogram(dendro)
+dendro.plot <- ggdendrogram(data = count_dendro, rotate = TRUE)
+# Preview the plot
+print(dendro.plot)
+pp
+#adjust plot order
+count_df_melt <- melt(count_df)
+count_df_melt$SYMBOL <- factor(count_df_melt$SYMBOL,levels =dup_genes_names)
+count_df_melt$variable <- factor(count_df_melt$variable,levels = rev(File_title[dendro$order]))
+
+#plot
+pp <- ggplot(count_df_melt,aes(x=variable,y=SYMBOL,fill=factor(value)))+
+  geom_tile()+ scale_fill_manual(values=c("white","steelblue"),name = "Appear")+
+  theme_minimal()+ggtitle("Scatter Plot of Ocurrence of Genes")+
+  theme(text = element_text(size = 18,face="bold"),
+        #axis.text.x = element_text(angle=-40, hjust=.1),
+        #axis.text.y = element_text(angle=-40, hjust=.1),
+        axis.text.x = element_text(size = 18,face="bold",angle=-40, hjust=.1),
+        axis.text.y = element_text(size = 8),
+        plot.title = element_text(size=15,face="bold"))
+
+pp
+ggsave("scatterPlot_4.png",pp,height= 6 , width = 5)
+
+grid.newpage()
+print(heatmap.plot, vp = viewport(x = 0.4, y = 0.5, width = 0.8, height = 1.0))
+print(dendro.plot, vp = viewport(x = 0.90, y = 0.43, width = 0.2, height = 0.92))
 ```
 
 
