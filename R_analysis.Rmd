@@ -1,0 +1,31 @@
+---
+title: "EL4_lipid_pullDown"
+author: "Xuerui Huang"
+date: "5/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Load requried package
+```{r}
+library(DESeq2)
+library(stringr)
+library(ggplot2)
+library(ggpubr)
+library(dplyr)
+library(tidyverse)
+library(reshape2)
+
+source("~/dataOS/CS_RNA/Functions.R")
+```
+
+# Load Data
+```{r}
+EL4_exon_count <- read.csv("/dataOS/frankyan/OTHERS/lipid_RNA/Results/pipeOutput/mm_lipidRNA-L1_2/countsTable/mm_lipidRNA-L1_2.EX.counts.table",sep = "\t")
+EL4_exon_count[,1] <- gsub("\\..*","", EL4_exon_count[,1])
+```
+
+#Plot 
+
