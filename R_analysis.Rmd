@@ -78,7 +78,26 @@ dup_genes_names[1:10]
 
 ## Plot histogram
 ```{r}
-for (i in c(seq()))
+pass_filter_count <- c()
+for (i in c(seq(1,8))){
+  cc <- length(which(table(Uni_gene) %>% as.data.frame(.) %>% .$Freq >= i))
+  pass_filter_count <- c(pass_filter_count,cc)
+}
+
+pass_filter_count_df <- cbind(c(seq(1,8)),pass_filter_count) %>% as.data.frame(.) %>% 
+  set_colnames(.,c("Freq_thresh","Count"))
+
+pp_bar <- ggplot(pass_filter_count_df,aes(x = factor(Freq_thresh),y = Count))+
+  geom_bar(stat="identity", fill="steelblue")+theme_minimal()+
+  geom_text(aes(label=Count), vjust=-0.1, color="black", size=4.5,face="bold")+
+  xlab("Occur_Freq_thresh")+ggtitle("Count of Genes Across Different Num of Samples")+
+  theme(text = element_text(size = 18,face="bold"),
+        axis.text.x = element_text(size = 18,face="bold",hjust=.1),
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size=15,face="bold"),
+        legend.position = "top")
+
+ggsave("Bar_occur.png",pp_bar,height = 6 , width = 10)
 ```
 
 ## Plot heatmap
@@ -122,7 +141,7 @@ count_df_melt$variable <- factor(count_df_melt$variable,levels = File_title[dend
 #plot
 pp <- ggplot(count_df_melt,aes(x=SYMBOL,y = variable,fill=factor(value)))+
   geom_tile()+ scale_fill_manual(values=c("lightblue","steelblue"),name = "Appear",
-                                 label=)+
+                                 label=c("Not Occur","Occur"))+
   theme_minimal()+ggtitle("Scatter Plot of Ocurrence of Genes")+
   theme(text = element_text(size = 18,face="bold"),
         axis.text.x = element_text(size = 4.5,face="bold",angle=-45,hjust=.1),

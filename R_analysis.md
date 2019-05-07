@@ -3,197 +3,29 @@ EL4\_lipid\_pullDown
 Xuerui Huang
 5/5/2019
 
+-   [Load requried package](#load-requried-package)
+-   [Load Data](#load-data)
+-   [DEseq](#deseq)
+-   [Plot result](#plot-result)
+    -   [Count](#count)
+    -   [Plot histogram](#plot-histogram)
+    -   [Plot heatmap](#plot-heatmap)
+
 Load requried package
 =====================
 
 ``` r
 library(DESeq2)
-```
-
-    ## Loading required package: S4Vectors
-
-    ## Loading required package: stats4
-
-    ## Loading required package: BiocGenerics
-
-    ## Loading required package: parallel
-
-    ## 
-    ## Attaching package: 'BiocGenerics'
-
-    ## The following objects are masked from 'package:parallel':
-    ## 
-    ##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-    ##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-    ##     parLapplyLB, parRapply, parSapply, parSapplyLB
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     IQR, mad, sd, var, xtabs
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     anyDuplicated, append, as.data.frame, cbind, colMeans,
-    ##     colnames, colSums, do.call, duplicated, eval, evalq, Filter,
-    ##     Find, get, grep, grepl, intersect, is.unsorted, lapply,
-    ##     lengths, Map, mapply, match, mget, order, paste, pmax,
-    ##     pmax.int, pmin, pmin.int, Position, rank, rbind, Reduce,
-    ##     rowMeans, rownames, rowSums, sapply, setdiff, sort, table,
-    ##     tapply, union, unique, unsplit, which, which.max, which.min
-
-    ## 
-    ## Attaching package: 'S4Vectors'
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     expand.grid
-
-    ## Loading required package: IRanges
-
-    ## Loading required package: GenomicRanges
-
-    ## Loading required package: GenomeInfoDb
-
-    ## Loading required package: SummarizedExperiment
-
-    ## Loading required package: Biobase
-
-    ## Welcome to Bioconductor
-    ## 
-    ##     Vignettes contain introductory material; view with
-    ##     'browseVignettes()'. To cite Bioconductor, see
-    ##     'citation("Biobase")', and for packages 'citation("pkgname")'.
-
-    ## Loading required package: DelayedArray
-
-    ## Loading required package: matrixStats
-
-    ## 
-    ## Attaching package: 'matrixStats'
-
-    ## The following objects are masked from 'package:Biobase':
-    ## 
-    ##     anyMissing, rowMedians
-
-    ## 
-    ## Attaching package: 'DelayedArray'
-
-    ## The following objects are masked from 'package:matrixStats':
-    ## 
-    ##     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
-
-    ## The following object is masked from 'package:base':
-    ## 
-    ##     apply
-
-``` r
 library(stringr)
 library(ggplot2)
 library(ggpubr)
-```
-
-    ## Loading required package: magrittr
-
-``` r
 library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following object is masked from 'package:matrixStats':
-    ## 
-    ##     count
-
-    ## The following object is masked from 'package:Biobase':
-    ## 
-    ##     combine
-
-    ## The following objects are masked from 'package:GenomicRanges':
-    ## 
-    ##     intersect, setdiff, union
-
-    ## The following object is masked from 'package:GenomeInfoDb':
-    ## 
-    ##     intersect
-
-    ## The following objects are masked from 'package:IRanges':
-    ## 
-    ##     collapse, desc, intersect, setdiff, slice, union
-
-    ## The following objects are masked from 'package:S4Vectors':
-    ## 
-    ##     first, intersect, rename, setdiff, setequal, union
-
-    ## The following objects are masked from 'package:BiocGenerics':
-    ## 
-    ##     combine, intersect, setdiff, union
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 library(tidyverse)
-```
-
-    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-
-    ## ✔ tibble  2.0.1     ✔ readr   1.1.1
-    ## ✔ tidyr   0.8.3     ✔ purrr   0.3.1
-    ## ✔ tibble  2.0.1     ✔ forcats 0.3.0
-
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::collapse()   masks IRanges::collapse()
-    ## ✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
-    ## ✖ dplyr::count()      masks matrixStats::count()
-    ## ✖ dplyr::desc()       masks IRanges::desc()
-    ## ✖ tidyr::expand()     masks S4Vectors::expand()
-    ## ✖ tidyr::extract()    masks magrittr::extract()
-    ## ✖ dplyr::filter()     masks stats::filter()
-    ## ✖ dplyr::first()      masks S4Vectors::first()
-    ## ✖ dplyr::lag()        masks stats::lag()
-    ## ✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
-    ## ✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
-    ## ✖ dplyr::rename()     masks S4Vectors::rename()
-    ## ✖ purrr::set_names()  masks magrittr::set_names()
-    ## ✖ dplyr::slice()      masks IRanges::slice()
-
-``` r
 library(reshape2)
-```
+library("grid")
 
-    ## 
-    ## Attaching package: 'reshape2'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     smiths
-
-``` r
 source("~/dataOS/CS_RNA/Functions.R")
 ```
-
-    ## Loading required package: AnnotationDbi
-
-    ## 
-    ## Attaching package: 'AnnotationDbi'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     select
-
-    ## 
-
-    ## 
-
-    ## 'select()' returned many:many mapping between keys and columns
-
-    ## 'select()' returned 1:many mapping between keys and columns
 
 Load Data
 =========
@@ -224,153 +56,7 @@ for (i in seq(3, ncol(EL4_count), by=2)){
   OutputVec_ENSEMBL <- c(OutputVec_ENSEMBL, temp_cand$Gene_name %>% as.data.frame(.))
   OutputVec_SYMBOL <- c(OutputVec_SYMBOL,temp_cand$SYMBOL %>% as.data.frame(.))
 }
-```
 
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-    ## converting counts to integer mode
-
-    ## estimating size factors
-
-    ## estimating dispersions
-
-    ## gene-wise dispersion estimates
-
-    ## mean-dispersion relationship
-
-    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
-    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
-    ##    specify fitType='local' or 'mean' to avoid this message next time.
-
-    ## final dispersion estimates
-
-    ## fitting model and testing
-
-``` r
 #get output colnames
 File_title <- gsub("_.*","",colnames(EL4_count))[seq(3,ncol(EL4_count), by=2)]
 
@@ -383,3 +69,150 @@ Op_SYMBOL <- sapply(OutputVec_SYMBOL, '[', seq(max(sapply(OutputVec_SYMBOL, leng
 
 Plot result
 ===========
+
+Count
+-----
+
+``` r
+#Get all the genes
+Uni_gene <- c()
+for (i in c(1:ncol(Op_SYMBOL))){
+  Uni_gene <- c(Uni_gene,Op_SYMBOL[,i] %>% .[!is.na(.)] %>% as.vector(.))
+}
+
+#gene cands duplicated occured genes
+dup_genes <- table(Uni_gene) %>% as.data.frame(.) %>% subset(.,.$Freq>4) %>% .[order(-.$Freq),]
+dup_genes_names <- dup_genes$Uni_gene %>% as.vector(.)
+dup_genes_names[1:10]
+```
+
+    ##  [1] "Cry1"     "Mgat2"    "Naip2"    "Pole4"    "Smarcb1"  "Utp11"   
+    ##  [7] "Ankrd50"  "Apba1"    "BC004004" "Cnn2"
+
+Plot histogram
+--------------
+
+``` r
+pass_filter_count <- c()
+for (i in c(seq(1,8))){
+  cc <- length(which(table(Uni_gene) %>% as.data.frame(.) %>% .$Freq >= i))
+  pass_filter_count <- c(pass_filter_count,cc)
+}
+
+pass_filter_count_df <- cbind(c(seq(1,8)),pass_filter_count) %>% as.data.frame(.) %>% 
+  set_colnames(.,c("Freq_thresh","Count"))
+
+pp_bar <- ggplot(pass_filter_count_df,aes(x = factor(Freq_thresh),y = Count))+
+  geom_bar(stat="identity", fill="steelblue")+theme_minimal()+
+  geom_text(aes(label=Count), vjust=-0.1, color="black", size=4.5,face="bold")+
+  xlab("Occur_Freq_thresh")+ggtitle("Count of Genes Across Different Num of Samples")+
+  theme(text = element_text(size = 18,face="bold"),
+        axis.text.x = element_text(size = 18,face="bold",hjust=.1),
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size=15,face="bold"),
+        legend.position = "top")
+```
+
+    ## Warning: Ignoring unknown parameters: face
+
+``` r
+ggsave("Bar_occur.png",pp_bar,height = 6 , width = 10)
+```
+
+Plot heatmap
+------------
+
+``` r
+#get count df for count occurace of genes in each file, 1==occur, 0==not occur
+ct_all <- c()
+for (i in c(1:length(File_title))){
+  ct_occur <- c()
+  for (gene in dup_genes_names){
+    if (gene %in% Op_SYMBOL[,i]){
+      ct_occur <- c(ct_occur,1)
+    } 
+    else{
+      ct_occur <- c(ct_occur,0)
+    }
+  }
+  ct_all <- c(ct_all,as.data.frame(ct_occur))
+}
+
+count_df <- cbind(dup_genes_names,as.data.frame(ct_all)) %>% as.data.frame(.) %>% set_colnames(.,c("SYMBOL",File_title))
+
+# Run clustering
+count_matrix <- as.matrix(t(count_df[,c(2:ncol(count_df))]))
+rownames(count_matrix) <- File_title
+dendro <- hclust(d = dist(x = count_matrix))
+
+File_title
+```
+
+    ## [1] "Cer.1"  "Chol.1" "PC.1"   "PE.1"   "PS.1"   "PiP3.1" "SM.1"   "SS.1"
+
+``` r
+File_title[dendro$order]
+```
+
+    ## [1] "PiP3.1" "Cer.1"  "PC.1"   "PS.1"   "SS.1"   "Chol.1" "PE.1"   "SM.1"
+
+``` r
+#plot dendrogram
+require("ggdendro")
+```
+
+    ## Loading required package: ggdendro
+
+``` r
+count_dendro <- as.dendrogram(dendro)
+dendro.plot <- ggdendrogram(data = count_dendro, rotate = TRUE)
+# Preview the plot
+print(dendro.plot)
+```
+
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+``` r
+#adjust plot order
+count_df_melt <- melt(count_df)
+```
+
+    ## Using SYMBOL as id variables
+
+``` r
+count_df_melt$SYMBOL <- factor(count_df_melt$SYMBOL,levels =dup_genes_names)
+count_df_melt$variable <- factor(count_df_melt$variable,levels = File_title[dendro$order])
+
+#plot
+pp <- ggplot(count_df_melt,aes(x=SYMBOL,y = variable,fill=factor(value)))+
+  geom_tile()+ scale_fill_manual(values=c("lightblue","steelblue"),name = "Appear",
+                                 label=c("Not Occur","Occur"))+
+  theme_minimal()+ggtitle("Scatter Plot of Ocurrence of Genes")+
+  theme(text = element_text(size = 18,face="bold"),
+        axis.text.x = element_text(size = 4.5,face="bold",angle=-45,hjust=.1),
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size=15,face="bold"),
+        legend.position = "top")
+
+#show plot
+pp
+```
+
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-6-2.png)
+
+``` r
+#save plot with dandogram
+png("scatterPlot_4.png", width = 9,height = 5,units = "in",res = 1200,pointsize = 4)
+grid.newpage()+
+  print(pp, vp = viewport(x = 0.35, y = 0.5, width = 0.65, height = 1.0))+
+  print(dendro.plot, vp =  viewport(x = 0.77, y = 0.46, width = 0.18, height = 0.72))
+```
+
+    ## NULL
+
+``` r
+dev.off()
+```
+
+    ## png 
+    ##   2
