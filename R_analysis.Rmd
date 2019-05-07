@@ -52,7 +52,7 @@ EL4_count <- column_to_rownames(EL4_count,"Geneid")
 #Used pvalue instead of padj
 OutputVec_ENSEMBL <- c()
 OutputVec_SYMBOL <- c()
-for (i in seq(3, ncol(EL4_count_1), by=2)){
+for (i in seq(3, ncol(EL4_count), by=2)){
   temp_df <- EL4_count[c(i,i+1,1,2)]
   temp_DEres_df <- perform_DEseq(temp_df,2,2)
   outputFileName <- gsub("_.*","",colnames(EL4_count)[i]) %>% paste0(.,"_cands.csv")
