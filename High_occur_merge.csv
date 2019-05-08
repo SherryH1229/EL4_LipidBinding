@@ -1,2 +1,3 @@
-"1" "Cry1" 8 5
-"2" "Zfp758" 6 5
+"SYMBOL" "Batch_1" "Batch_2" "ENSEMBL" "GENENAME" "Biotype"
+"Cry1" 8 5 "ENSMUSG00000020038" "cryptochrome 1 (photolyase-like)" "protein_coding"
+"Zfp758" 6 5 "ENSMUSG00000044501" "zinc finger protein 758" "protein_coding"

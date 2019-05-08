@@ -1,0 +1,4 @@
+"Gene_name" "tracking_id" "Biotype" "GENENAME" "log2FoldChange.x" "log2FoldChange.y" "Freq"
+"Hivep3" "ENSMUSG00000028634" "protein_coding" "human immunodeficiency virus type I enhancer binding protein 3" 3.38874458348149 2.21508045249775 2
+"Uaca" "ENSMUSG00000034485" "protein_coding" "uveal autoantigen with coiled-coil domains and ankyrin repeats" 6.23041287993535 3.74820995901358 1
+"Zan" "ENSMUSG00000079173" "protein_coding" "zonadhesin" 6.32288736223581 3.48078270525447 1
