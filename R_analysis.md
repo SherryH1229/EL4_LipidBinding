@@ -132,43 +132,24 @@ Plot
 ``` r
 fil_stats_df <- na.omit(stats_df) %>% set_colnames(.,c("Pvalue","Qvalue","lable")) %>% as.data.frame(.)
 
-# Plot for pvalue
-png("Hist_Pval.png", width = 10,height = 4,units = "in",res = 1200,pointsize = 4)
-par(mfrow = c(2, 4))  # Set up a 2 x 2 plotting space
-for (i in File_Name_vec) { # Loop over loop.vector
-  x <-fil_stats_df[(fil_stats_df$lable) == i,] %>% .$Pvalue
-  hist(x,
-       main = paste(i),
-       xlab = "Pvalue",
-       #col = "lightblue",
-       border="steelblue",
-       xlim = c(0, 1),breaks=50,cex.main=4,cex.axis = 1.5,cex.lab = 1.5)
-}
-mtext("Title", outer = TRUE, cex = 1.5)
-dev.off()
+pp_P <- plot_Pvalue(fil_stats_df)
+pp_P
 ```
 
-    ## png 
-    ##   2
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
-#plot for Qvalue
-png("Hist_Qvalue.png", width = 10,height = 4,units = "in",res = 1200,pointsize = 4)
-par(mfrow = c(2, 4))  # Set up a 2 x 2 plotting space
-for (i in File_Name_vec) { # Loop over loop.vector
-  x <-fil_stats_df[(fil_stats_df$lable) == i,] %>% .$Qvalue
-  hist(x,
-       main = paste(i),
-       xlab = "Qvalue",
-       border="steelblue",
-       xlim = c(0, 1),breaks=50,cex.main=4,cex.axis = 1.5,cex.lab = 1.5)
-}
+ggsave("Hist_Pvalue.png",pp_P,height = 6 , width = 10)
 
-dev.off()
+pp_Q <- plot_Qvalue(fil_stats_df)
+pp_Q
 ```
 
-    ## png 
-    ##   2
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-5-2.png)
+
+``` r
+ggsave("Hist_Qvalue.png",pp_Q,height = 6 , width = 10)
+```
 
 Independent Filtering
 ---------------------
@@ -210,43 +191,21 @@ Plot
 ``` r
 fil_stats_df <- na.omit(stats_df) %>% set_colnames(.,c("Pvalue","Qvalue","lable")) %>% as.data.frame(.)
 
-#Pvalue
-png("Hist_Pval_ind.png", width = 10,height = 4,units = "in",res = 1200,pointsize = 4)
-par(mfrow = c(2, 4))  # Set up a 2 x 2 plotting space
-for (i in File_Name_vec) { # Loop over loop.vector
-  x <-fil_stats_df[(fil_stats_df$lable) == i,] %>% .$Pvalue
-  
-  hist(x,
-       main = paste(i),
-       xlab = "Pvalue",
-       #col = "lightblue",
-       border="steelblue",
-       xlim = c(0, 1),breaks=50,cex.main=4,cex.axis = 1.5,cex.lab = 1.5)
-}
-mtext("Title", outer = TRUE, cex = 1.5)
-dev.off()
+pp_P <- plot_Pvalue(fil_stats_df)
+pp_P
 ```
 
-    ## png 
-    ##   2
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
-#Qvalue
-png("Hist_Qvalue_ind.png", width = 10,height = 4,units = "in",res = 1200,pointsize = 4)
-par(mfrow = c(2, 4))  # Set up a 2 x 2 plotting space
-for (i in File_Name_vec) { # Loop over loop.vector
-  x <-fil_stats_df[(fil_stats_df$lable) == i,] %>% .$Qvalue
- 
-  hist(x,
-       main = paste(i),
-       xlab = "Qvalue",
-       #col = "lightblue",
-       border="steelblue",
-       xlim = c(0, 1),breaks=50,cex.main=4,cex.axis = 1.5,cex.lab = 1.5)
-}
+ggsave("Hist_Pvalue_ind.png",pp_P,height = 6 , width = 10)
 
-dev.off()
+pp_Q <- plot_Qvalue(fil_stats_df)
+pp_Q
 ```
 
-    ## png 
-    ##   2
+![](R_analysis_files/figure-markdown_github/unnamed-chunk-7-2.png)
+
+``` r
+ggsave("Hist_Qvalue_ind.png",pp_Q,height = 6 , width = 10)
+```
